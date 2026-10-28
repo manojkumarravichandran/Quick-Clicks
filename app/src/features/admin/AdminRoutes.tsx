@@ -1,11 +1,24 @@
-import { Routes, Route } from 'react-router-dom'
-import { Page } from '../../components/ui'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { RequireAuth } from '../../components/Layout'
+import { AdminTabs } from './shared'
+import BookingsPage from './BookingsPage'
+import BookingDetailPage from './BookingDetailPage'
+import CrewPage from './CrewPage'
+import PackagesPage from './PackagesPage'
+import UsersPage from './UsersPage'
 
-// Placeholder: replaced by the admin feature build.
 export default function AdminRoutes() {
   return (
-    <Routes>
-      <Route path="*" element={<Page title="Admin">Coming soon</Page>} />
-    </Routes>
+    <RequireAuth role={['admin']}>
+      <AdminTabs />
+      <Routes>
+        <Route index element={<BookingsPage />} />
+        <Route path="bookings/:id" element={<BookingDetailPage />} />
+        <Route path="crew" element={<CrewPage />} />
+        <Route path="packages" element={<PackagesPage />} />
+        <Route path="users" element={<UsersPage />} />
+        <Route path="*" element={<Navigate to="/admin" replace />} />
+      </Routes>
+    </RequireAuth>
   )
 }
