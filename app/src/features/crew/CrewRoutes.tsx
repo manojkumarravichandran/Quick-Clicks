@@ -1,11 +1,21 @@
-import { Routes, Route } from 'react-router-dom'
-import { Page } from '../../components/ui'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { RequireAuth } from '../../components/Layout'
+import { CrewProvider } from './CrewContext'
+import CrewDashboard from './CrewDashboard'
+import CrewJoin from './CrewJoin'
+import CrewJob from './CrewJob'
 
-// Placeholder: replaced by the crew feature build.
 export default function CrewRoutes() {
   return (
-    <Routes>
-      <Route path="*" element={<Page title="Crew">Coming soon</Page>} />
-    </Routes>
+    <RequireAuth>
+      <CrewProvider>
+        <Routes>
+          <Route index element={<CrewDashboard />} />
+          <Route path="join" element={<CrewJoin />} />
+          <Route path="jobs/:id" element={<CrewJob />} />
+          <Route path="*" element={<Navigate to="/crew" replace />} />
+        </Routes>
+      </CrewProvider>
+    </RequireAuth>
   )
 }

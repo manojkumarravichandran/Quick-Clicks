@@ -50,10 +50,10 @@ export function Layout() {
 
 /** Gate a route on sign-in (and optionally a role). Sends guests to /signin?next=… */
 export function RequireAuth({ role, children }: { role?: Enums<'user_role'>[]; children: ReactNode }) {
-  const { session, profile, loading } = useAuth()
+  const { session, profile, loading, profileReady } = useAuth()
   const location = useLocation()
-  if (loading || (session && !profile)) return <PageLoader />
+  if (loading || !profileReady) return <PageLoader />
   if (!session) return <Navigate to={`/signin?next=${encodeURIComponent(location.pathname + location.search)}`} replace />
-  if (role && profile && !role.includes(profile.role)) return <Navigate to="/" replace />
+  if (role && !(profile && role.includes(profile.role))) return <Navigate to="/" replace />
   return <>{children}</>
 }

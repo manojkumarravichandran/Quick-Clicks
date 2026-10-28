@@ -7,6 +7,8 @@ type AuthState = {
   session: Session | null
   profile: Tables<'profiles'> | null
   loading: boolean
+  /** True once the profile fetch for the current session has finished (even if no row exists). */
+  profileReady: boolean
   refreshProfile: () => Promise<void>
   signOut: () => Promise<void>
 }
@@ -17,6 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Tables<'profiles'> | null>(null)
   const [loading, setLoading] = useState(true)
+  const [profileUserId, setProfileUserId] = useState<string | null>(null)
 
   const loadProfile = useCallback(async (userId: string | undefined) => {
     if (!userId) {
@@ -25,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle()
     setProfile(data)
+    setProfileUserId(userId)
   }, [])
 
   useEffect(() => {
@@ -45,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     session,
     profile,
     loading,
+    profileReady: !session || profileUserId === session.user.id,
     refreshProfile: () => loadProfile(session?.user.id),
     signOut: async () => {
       await supabase.auth.signOut()
