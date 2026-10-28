@@ -150,6 +150,10 @@ export type Database = {
         Args: { p_booking_id: string }
         Returns: { display_name: string; lat: number; lng: number; updated_at: string }[]
       }
+      booking_location: {
+        Args: { p_booking_id: string }
+        Returns: { lat: number; lng: number }[]
+      }
       booking_customer_info: {
         Args: { p_booking_id: string }
         Returns: { full_name: string; lat: number; lng: number; phone: string }[]

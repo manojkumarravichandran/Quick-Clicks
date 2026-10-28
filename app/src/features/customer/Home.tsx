@@ -92,6 +92,13 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      <p className="mt-8 text-center text-sm text-muted">
+        Photographer or videographer?{' '}
+        <Link to="/crew/join" className="font-semibold text-accent">
+          Join as crew
+        </Link>
+      </p>
     </div>
   )
 }

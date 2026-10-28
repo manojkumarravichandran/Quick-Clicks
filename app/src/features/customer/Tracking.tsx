@@ -52,7 +52,12 @@ export default function Tracking() {
   const [now, setNow] = useState(() => Date.now())
   const [cancelling, setCancelling] = useState(false)
   const [actionError, setActionError] = useState<string | null>(null)
-  const jobPos = loadJobPosition(id)
+  const [serverPos, setServerPos] = useState<{ lat: number; lng: number } | null>(null)
+  const jobPos = serverPos ?? loadJobPosition(id)
+
+  useEffect(() => {
+    supabase.rpc('booking_location', { p_booking_id: id }).then(({ data }) => setServerPos(data?.[0] ?? null))
+  }, [id])
 
   const loadBooking = useCallback(async () => {
     const { data, error } = await supabase.from('bookings').select('*, packages(name)').eq('id', id).maybeSingle()
